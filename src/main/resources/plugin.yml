@@ -10,3 +10,27 @@ commands:
 permissions:
   quickchannels.admin:
     description: "Gives access to /channel reload"
+  quickchannels.styles.*:
+    description: "Gives access to all style codes in channel messages"
+    children:
+      quickchannels.styles.a: true
+      quickchannels.styles.b: true
+      quickchannels.colors:c: true
+      quickchannels.styles.d: true
+      quickchannels.styles.e: true
+      quickchannels.styles.f: true
+      quickchannels.styles.1: true
+      quickchannels.styles.2: true
+      quickchannels.styles.3: true
+      quickchannels.styles.4: true
+      quickchannels.styles.5: true
+      quickchannels.styles.6: true
+      quickchannels.styles.7: true
+      quickchannels.styles.8: true
+      quickchannels.styles.9: true
+      quickchannels.styles.k: true
+      quickchannels.styles.l: true
+      quickchannels.styles.m: true
+      quickchannels.styles.n: true
+      quickchannels.styles.o: true
+      quickchannels.styles.r: true

@@ -96,20 +96,27 @@ public class QuickChannels extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
         String msg = event.getMessage();
         if (msg.startsWith(prefix)) {
             event.setCancelled(true);
             msg = msg.substring(prefix.length());
-            String channel = getChannel(event.getPlayer());
+            String channel = getChannel(player);
             if (channel != null) {
-                sendToChannel(channel, ChatColor.translateAlternateColorCodes('&', format)
+                msg = ChatColor.translateAlternateColorCodes('&', format)
                         .replace("{channel}", channel)
-                        .replace("{player}", event.getPlayer().getName())
-                        .replace("{message}", msg));
+                        .replace("{player}", player.getName())
+                        .replace("{message}", msg);
+                for (ChatColor c : ChatColor.values()) {
+                    if (player.hasPermission("quickchannels.styles." + c.getChar()) || player.hasPermission("quickchannels.styles." + c.name().toLowerCase())) {
+                        msg = msg.replace("&" + c.getChar(), ChatColor.COLOR_CHAR + "" + c.getChar());
+                    }
+                }
+                sendToChannel(channel, msg);
                 String sound = getConfig().getString("sounds.message", "click");
                 playSoundToChannel(channel, sound);
             } else {
-                event.getPlayer().sendMessage(error);
+                player.sendMessage(error);
             }
         }
     }
