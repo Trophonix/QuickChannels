@@ -1,7 +1,6 @@
-#
 # QuickChannels made by Trophonix (https://www.spigotmc.org/members/trophonix.68234/)
 # Suggested by takatalvi (https://www.spigotmc.org/members/takatalvi.242796/)
-#
+# -----------------------------
 # Available placeholders:
 # {channel} - Replaced with name of channel
 # {prefix} - Prefix
@@ -9,7 +8,14 @@
 # {message} - (where appropriate) Replaced with message
 # {admin} - Put before a help message line to require the quickchannel.admin permission for that line
 # &<color code> - Replaced with colors (see http://minecraft.gamepedia.com/Formatting_codes)
-#
+# -----------------------------
+# For the sounds section, I have made a few sounds work for all versions.
+# -
+# level_up, click, lava_pop, exp_orb, villager_yes, villager_no, note_pling, note_bass, note_snare_drum, anvil_land
+# -
+# If a sound you want isn't on the list, please see the links below for the version you're using.
+# Before 1.9: http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Sound.html
+# 1.9+: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 prefix: "!"
 message-format: "&9[Channel ({channel})] {player}: &b{message}"
 messages:
@@ -24,3 +30,7 @@ messages:
   left: "&f{player} &aleft the channel"
   error: "&cYou're not in a channel"
   reloaded: "&aQuickChannels config reloaded"
+sounds:
+  join: 'pling'
+  leave: 'villager_no'
+  message: 'click'

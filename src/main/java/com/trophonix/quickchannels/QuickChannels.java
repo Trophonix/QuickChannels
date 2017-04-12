@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,11 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by Lucas on 4/11/17.
  */
 public class QuickChannels extends JavaPlugin implements Listener {
+
+    private static Logger logger;
 
     private String prefix;
     private String format;
@@ -34,11 +38,16 @@ public class QuickChannels extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
+        getConfig().setDefaults(YamlConfiguration.loadConfiguration(getResource("config.yml")));
+        getConfig().options().copyHeader(true);
+        getConfig().options().copyDefaults(true);
+        saveConfig();
 
         reloadMessages();
 
         getServer().getPluginManager().registerEvents(this, this);
+
+        logger = getLogger();
     }
 
     @Override
@@ -64,12 +73,17 @@ public class QuickChannels extends JavaPlugin implements Listener {
                 setChannel(player, null);
                 player.sendMessage(leave.replace("{channel}", channel));
                 sendToChannel(channel, left.replace("{channel}", channel).replace("{player}", player.getName()));
+                String sound = getConfig().getString("sounds.leave", "villager_no");
+                Sounds.play(player, sound);
+                playSoundToChannel(channel, sound);
                 return true;
             }
             String current = getChannel(player);
             if (current != null) Bukkit.dispatchCommand(player, "channel leave " + current);
             String channel = args[0].toLowerCase();
             setChannel(player, channel);
+            String sound = getConfig().getString("sounds.join", "pling");
+            playSoundToChannel(channel, sound);
             return true;
         }
         for (String helpLine : this.help) {
@@ -78,6 +92,26 @@ public class QuickChannels extends JavaPlugin implements Listener {
             }
         }
         return true;
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        String msg = event.getMessage();
+        if (msg.startsWith(prefix)) {
+            event.setCancelled(true);
+            msg = msg.substring(prefix.length());
+            String channel = getChannel(event.getPlayer());
+            if (channel != null) {
+                sendToChannel(channel, ChatColor.translateAlternateColorCodes('&', format)
+                        .replace("{channel}", channel)
+                        .replace("{player}", event.getPlayer().getName())
+                        .replace("{message}", msg));
+                String sound = getConfig().getString("sounds.message", "click");
+                playSoundToChannel(channel, sound);
+            } else {
+                event.getPlayer().sendMessage(error);
+            }
+        }
     }
 
     private String getChannel(Player player) {
@@ -99,22 +133,10 @@ public class QuickChannels extends JavaPlugin implements Listener {
         });
     }
 
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent event) {
-        String msg = event.getMessage();
-        if (msg.startsWith(prefix)) {
-            event.setCancelled(true);
-            msg = msg.substring(prefix.length());
-            String channel = getChannel(event.getPlayer());
-            if (channel != null) {
-                sendToChannel(channel, ChatColor.translateAlternateColorCodes('&', format)
-                        .replace("{channel}", channel)
-                        .replace("{player}", event.getPlayer().getName())
-                        .replace("{message}", msg));
-            } else {
-                event.getPlayer().sendMessage(error);
-            }
-        }
+    private void playSoundToChannel(String channel, String sound) {
+        channels.forEach((uuid, ch) -> {
+            if (ch.equals(channel)) Sounds.play(Bukkit.getPlayer(uuid), sound);
+        });
     }
 
     private void reloadMessages() {
@@ -131,5 +153,7 @@ public class QuickChannels extends JavaPlugin implements Listener {
         this.error = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.error", "&cYou're not in a channel!"));
         this.reloaded = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.reloaded", "&aQuickChannels config reloaded!"));
     }
+
+    static Logger logger() { return logger; }
 
 }
