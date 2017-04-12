@@ -1,6 +1,6 @@
 name: QuickChannels
 author: Trophonix
-version: 1.01
+version: 1.02
 main: com.trophonix.quickchannels.QuickChannels
 commands:
   channel:
