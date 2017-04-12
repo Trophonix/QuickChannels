@@ -1,5 +1,6 @@
 package com.trophonix.quickchannels;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -26,6 +27,7 @@ public class QuickChannels extends JavaPlugin implements Listener {
 
     private String prefix;
     private String format;
+    private boolean linksRequirePermission;
 
     private String[] help;
     private String joined;
@@ -33,6 +35,7 @@ public class QuickChannels extends JavaPlugin implements Listener {
     private String left;
     private String error;
     private String reloaded;
+    private String noLinks;
 
     private Map<UUID, String> channels = new HashMap<>();
 
@@ -103,6 +106,15 @@ public class QuickChannels extends JavaPlugin implements Listener {
             msg = msg.substring(prefix.length());
             String channel = getChannel(player);
             if (channel != null) {
+                if (linksRequirePermission && !player.hasPermission("quickchannels.links")) {
+                    for (String s : msg.split(" ")) {
+                        if (UrlValidator.getInstance().isValid(s)) {
+                            player.sendMessage(noLinks);
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                }
                 msg = ChatColor.translateAlternateColorCodes('&', format)
                         .replace("{channel}", channel)
                         .replace("{player}", player.getName())
@@ -149,6 +161,7 @@ public class QuickChannels extends JavaPlugin implements Listener {
     private void reloadMessages() {
         prefix = getConfig().getString("prefix", "!");
         format = getConfig().getString("message-format", "&9[{channel}] {player}: &b{message}");
+        linksRequirePermission = getConfig().getBoolean("links-require-permission", false);
         List<String> help = getConfig().getStringList("messages.help");
         this.help = new String[help.size()];
         for (int i = 0; i < help.size(); i++) {
@@ -159,6 +172,7 @@ public class QuickChannels extends JavaPlugin implements Listener {
         this.left = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.left", "&7{player} &cleft the channel."));
         this.error = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.error", "&cYou're not in a channel!"));
         this.reloaded = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.reloaded", "&aQuickChannels config reloaded!"));
+        this.noLinks = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.no-links", "&cYou don't have permission to send links in channels!"));
     }
 
     static Logger logger() { return logger; }

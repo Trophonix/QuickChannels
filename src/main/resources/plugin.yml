@@ -34,3 +34,5 @@ permissions:
       quickchannels.styles.n: true
       quickchannels.styles.o: true
       quickchannels.styles.r: true
+  quickchannels.links:
+    description: "Gives access to sending links in channels"

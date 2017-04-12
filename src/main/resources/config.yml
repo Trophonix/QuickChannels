@@ -18,6 +18,7 @@
 # 1.9+: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
 prefix: "!"
 message-format: "&9[Channel ({channel})] {player}: &b{message}"
+links-require-permission: false
 messages:
   help:
     - "&a[QuickChannels by Trophonix] Help:"
@@ -30,6 +31,7 @@ messages:
   left: "&f{player} &aleft the channel"
   error: "&cYou're not in a channel"
   reloaded: "&aQuickChannels config reloaded"
+  no-links: "&cYou don't have permission to send links in channels! "
 sounds:
   join: "note_pling"
   leave: "note_bass"
