@@ -1,0 +1,26 @@
+#
+# QuickChannels made by Trophonix (https://www.spigotmc.org/members/trophonix.68234/)
+# Suggested by takatalvi (https://www.spigotmc.org/members/takatalvi.242796/)
+#
+# Available placeholders:
+# {channel} - Replaced with name of channel
+# {prefix} - Prefix
+# {player} - (where appropriate) Replaced with player's name
+# {message} - (where appropriate) Replaced with message
+# {admin} - Put before a help message line to require the quickchannel.admin permission for that line
+# &<color code> - Replaced with colors (see http://minecraft.gamepedia.com/Formatting_codes)
+#
+prefix: "!"
+message-format: "&9[Channel ({channel})] {player}: &b{message}"
+messages:
+  help:
+    - "&a[QuickChannels by Trophonix] Help:"
+    - "&7/channel [name] &fJoin a channel"
+    - "&7/channel leave &fLeave your channel"
+    - "{admin}&7/channel reload &fReload QuickChannels config"
+    - "&7{prefix}message &fTalk in your channel"
+  joined: "&f{player} &ahas joined the channel"
+  leave: "&aYou left &f{channel}"
+  left: "&f{player} &aleft the channel"
+  error: "&cYou're not in a channel"
+  reloaded: "&aQuickChannels config reloaded"

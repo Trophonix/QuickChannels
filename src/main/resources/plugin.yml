@@ -1,0 +1,12 @@
+name: QuickChannels
+author: Trophonix
+version: 1.0
+main: com.trophonix.quickchannels.QuickChannels
+commands:
+  channel:
+    description: "Create/join a channel"
+    usage: "/channel [name]"
+    aliases: [ch,qc,quickchannel,quickchannels,channels]
+permissions:
+  quickchannels.admin:
+    description: "Gives access to /channel reload"
