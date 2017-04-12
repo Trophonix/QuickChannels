@@ -31,6 +31,6 @@ messages:
   error: "&cYou're not in a channel"
   reloaded: "&aQuickChannels config reloaded"
 sounds:
-  join: 'pling'
+  join: 'note_pling'
   leave: 'villager_no'
   message: 'click'
