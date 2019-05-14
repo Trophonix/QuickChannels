@@ -5,17 +5,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -41,10 +38,7 @@ public class QuickChannels extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        getConfig().setDefaults(YamlConfiguration.loadConfiguration(getResource("config.yml")));
-        getConfig().options().copyHeader(true);
-        getConfig().options().copyDefaults(true);
-        saveConfig();
+        saveDefaultConfig();
 
         reloadMessages();
 
@@ -54,7 +48,7 @@ public class QuickChannels extends JavaPlugin implements Listener {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("quickchannels.admin")) {
                 reloadConfig();
@@ -107,7 +101,9 @@ public class QuickChannels extends JavaPlugin implements Listener {
             String channel = getChannel(player);
             if (channel != null) {
                 if (linksRequirePermission && !player.hasPermission("quickchannels.links")) {
-                    for (String s : msg.split(" ")) {
+                    List<String> tests = new ArrayList<>(Arrays.asList(msg.split(" ")));
+                    tests.addAll(Arrays.asList(msg.replace(",", ".").split(" ")));
+                    for (String s : tests) {
                         if (UrlValidator.getInstance().isValid(s)) {
                             player.sendMessage(noLinks);
                             event.setCancelled(true);
@@ -133,11 +129,11 @@ public class QuickChannels extends JavaPlugin implements Listener {
         }
     }
 
-    private String getChannel(Player player) {
+    private String getChannel(@NotNull Player player) {
         return channels.get(player.getUniqueId());
     }
 
-    private void setChannel(Player player, String channel) {
+    private void setChannel(@NotNull Player player, String channel) {
         if (channel == null) {
             channels.remove(player.getUniqueId());
         } else {
@@ -146,13 +142,13 @@ public class QuickChannels extends JavaPlugin implements Listener {
         }
     }
 
-    private void sendToChannel(String channel, String message) {
+    private void sendToChannel(@NotNull String channel, String message) {
         channels.forEach((uuid, ch) -> {
             if (ch.equals(channel)) Bukkit.getPlayer(uuid).sendMessage(message);
         });
     }
 
-    private void playSoundToChannel(String channel, String sound) {
+    private void playSoundToChannel(@NotNull String channel, String sound) {
         channels.forEach((uuid, ch) -> {
             if (ch.equals(channel)) Sounds.play(Bukkit.getPlayer(uuid), sound);
         });

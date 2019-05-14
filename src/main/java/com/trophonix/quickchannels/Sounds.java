@@ -3,6 +3,7 @@ package com.trophonix.quickchannels;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,10 +39,16 @@ public class Sounds {
             expOrb = Sound.valueOf("ENTITY_EXPERIENCE_ORB_PICKUP");
             villagerYes = Sound.valueOf("ENTITY_VILLAGER_YES");
             villagerNo = Sound.valueOf("ENTITY_VILLAGER_NO");
-            notePling = Sound.valueOf("BLOCK_NOTE_PLING");
-            noteBass = Sound.valueOf("BLOCK_NOTE_BASS");
-            noteSnareDrum = Sound.valueOf("BLOCK_NOTE_SNARE");
             anvilLand = Sound.valueOf("BLOCK_ANVIL_LAND");
+            if (version < 113) {
+                notePling = Sound.valueOf("BLOCK_NOTE_PLING");
+                noteBass = Sound.valueOf("BLOCK_NOTE_BASS");
+                noteSnareDrum = Sound.valueOf("BLOCK_NOTE_SNARE");
+            } else {
+                notePling = Sound.valueOf("BLOCK_NOTE_BLOCK_PLING");
+                noteBass = Sound.valueOf("BLOCK_NOTE_BLOCK_BASS");
+                noteSnareDrum = Sound.valueOf("BLOCK_NOTE_BLOCK_SNARE");
+            }
         }
         put("level_up", levelUp);
         put("click", click);
@@ -55,7 +62,7 @@ public class Sounds {
         put("anvil_land", anvilLand);
     }
 
-    public static void play(Player player, String sound) {
+    public static void play(@NotNull Player player, String sound) {
         if (sound == null || sound.isEmpty()) return;
         if (sounds.containsKey(sound)) {
             player.playSound(player.getEyeLocation(), sounds.get(sound), 1, 1);
