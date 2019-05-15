@@ -1,7 +1,8 @@
-name: QuickChannels
-author: Trophonix
-version: 1.02
-main: com.trophonix.quickchannels.QuickChannels
+name: "QuickChannels"
+author: "Trophonix"
+version: "${project.version}"
+api-version: "1.13"
+main: "com.trophonix.quickchannels.QuickChannels"
 commands:
   channel:
     description: "Create/join a channel"

@@ -1,13 +1,28 @@
+#
 # QuickChannels made by Trophonix (https://www.spigotmc.org/members/trophonix.68234/)
 # Suggested by takatalvi (https://www.spigotmc.org/members/takatalvi.242796/)
 # -----------------------------
+# CONFIG REFEENCE
+# -----------------------------
+# Explanations:
+#  prefix: Prefix entered before a message to send to channel (or reverse, see below)
+#  prefix-sends-to-channel: true/false. If true, a message will be sent to the channel if
+#                                       message starts with the prefix. If false, message
+#                                       will be sent globally if message starts with prefix
+#                                       and the player is in a channel.
+#  message-format: Format for the channel messages.
+#  links-require-permission: If true, will try to detect URLs in message and block if they
+#                           don't have the quickchannels.links permission.
+#  console-output: true/false. Whether to send channel messages into console for logging.
+# -----------------------------
 # Available placeholders:
-# {channel} - Replaced with name of channel
-# {prefix} - Prefix
-# {player} - (where appropriate) Replaced with player's name
-# {message} - (where appropriate) Replaced with message
-# {admin} - Put before a help message line to require the quickchannel.admin permission for that line
-# &<color code> - Replaced with colors (see http://minecraft.gamepedia.com/Formatting_codes)
+#  {channel} - Replaced with name of channel
+#  {prefix} - Prefix
+#  {members} - Prints all members of the player's channel separated by commas
+#  {player} - (where appropriate) Replaced with player's name
+#  {message} - (where appropriate) Replaced with message
+#  {admin} - Put before a help message line to require the quickchannel.admin permission for that line
+#  &<color code> - Replaced with colors (see http://minecraft.gamepedia.com/Formatting_codes)
 # -----------------------------
 # For the sounds section, I have made a few sounds work for all versions.
 # -
@@ -16,9 +31,14 @@
 # If a sound you want isn't on the list, please see the links below for the version you're using.
 # Before 1.9: http://docs.codelanx.com/Bukkit/1.8/org/bukkit/Sound.html
 # 1.9+: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+#
+
 prefix: "!"
+prefix-sends-to-channel: true
 message-format: "&9[Channel ({channel})] {player}: &b{message}"
 links-require-permission: false
+console-output: true
+remove-on-quit: true
 messages:
   help:
     - "&a[QuickChannels by Trophonix] Help:"
@@ -26,12 +46,17 @@ messages:
     - "&7/channel leave &fLeave your channel"
     - "{admin}&7/channel reload &fReload QuickChannels config"
     - "&7{prefix}message &fTalk in your channel"
-  joined: "&f{player} &ahas joined the channel"
+  join:
+    - ' '
+    - '&aYou joined &f{channel}'
+    - '&7Members: &f{members}'
+    - ' '
+  joined: "&f{player} &ajoined the channel"
   leave: "&aYou left &f{channel}"
   left: "&f{player} &aleft the channel"
   error: "&cYou're not in a channel"
   reloaded: "&aQuickChannels config reloaded"
-  no-links: "&cYou don't have permission to send links in channels! "
+  no-links: "&cYou don't have permission to send links in channels!"
 sounds:
   join: "note_pling"
   leave: "note_bass"
