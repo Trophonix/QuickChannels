@@ -14,6 +14,7 @@
 #  links-require-permission: If true, will try to detect URLs in message and block if they
 #                           don't have the quickchannels.links permission.
 #  console-output: true/false. Whether to send channel messages into console for logging.
+#  remove-on-quit: true/false. Whether to remove player from channel when they leave.
 # -----------------------------
 # Available placeholders:
 #  {channel} - Replaced with name of channel
@@ -41,22 +42,31 @@ console-output: true
 remove-on-quit: true
 messages:
   help:
-    - "&a[QuickChannels by Trophonix] Help:"
-    - "&7/channel [name] &fJoin a channel"
-    - "&7/channel leave &fLeave your channel"
-    - "{admin}&7/channel reload &fReload QuickChannels config"
-    - "&7{prefix}message &fTalk in your channel"
+  - "&a[QuickChannels by Trophonix] Help:"
+  - "&7/channel (name) &fJoin a channel."
+  - "&7/channel leave &fLeave your channel."
+  - "{admin}&7/channel reload &fReload QuickChannels config."
+  - "{admin}&7/channel force (player) (channel) &fMove a player into channel."
+  - "{admin}&7/channel force (player) &fForce player to leave channel."
+  - "&7{prefix}message &fTalk in your channel."
   join:
-    - ' '
-    - '&aYou joined &f{channel}'
-    - '&7Members: &f{members}'
-    - ' '
-  joined: "&f{player} &ajoined the channel"
-  leave: "&aYou left &f{channel}"
-  left: "&f{player} &aleft the channel"
-  error: "&cYou're not in a channel"
-  reloaded: "&aQuickChannels config reloaded"
+  - " "
+  - "&aYou joined &f{channel}."
+  - "&7Members: &f{members}"
+  - " "
+  joined: "&f{player} &ajoined the channel."
+  leave: "&aYou left &f{channel}."
+  left: "&f{player} &aleft the channel."
+  error: "&cYou're not in a channel."
+  reloaded: "&aQuickChannels config reloaded."
   no-links: "&cYou don't have permission to send links in channels!"
+  forced-in:
+  - "&cYou were moved to &f{channel}."
+  - "&7Members: &f{members}"
+  forced-out: "&cYou were moved out of &f{channel}."
+  player-not-found: "&cPlayer not found: {player}"
+  forced-success: "&aSuccessfully moved {player}."
+  forced-no-channel: "&cThat player isn't in a channel."
 sounds:
   join: "note_pling"
   leave: "note_bass"

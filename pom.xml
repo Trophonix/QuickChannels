@@ -6,7 +6,7 @@
 
     <groupId>com.trophonix</groupId>
     <artifactId>QuickChannels</artifactId>
-    <version>1.1</version>
+    <version>1.11</version>
 
     <repositories>
         <repository>
