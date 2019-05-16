@@ -116,10 +116,10 @@ public class QuickChannels extends JavaPlugin implements Listener {
         Player player = event.getPlayer();
         String msg = event.getMessage();
         if (msg.trim().equals(prefix)) return;
-        if (prefixSendsToChannel == msg.startsWith(prefix)) {
-            if (prefixSendsToChannel) msg = msg.substring(prefix.length());
-            String channel = getChannel(player);
-            if (channel != null) {
+        String channel = getChannel(player);
+        if (channel != null) {
+            if (prefixSendsToChannel == msg.startsWith(prefix)) {
+                if (prefixSendsToChannel) msg = msg.substring(prefix.length());
                 event.setCancelled(true);
                 if (linksRequirePermission && !player.hasPermission("quickchannels.links")) {
                     List<String> tests = new ArrayList<>(Arrays.asList(msg.split(" ")));
@@ -144,8 +144,6 @@ public class QuickChannels extends JavaPlugin implements Listener {
                 error.send(this, player);
                 event.setCancelled(true);
             }
-        } else if (!prefixSendsToChannel && msg.startsWith(prefix)) {
-            event.setMessage(msg.substring(prefix.length()));
         }
     }
 
@@ -162,8 +160,10 @@ public class QuickChannels extends JavaPlugin implements Listener {
         if (channel == null) {
             String previousChannel = getChannel(player);
             channels.remove(player.getUniqueId());
-            if (forced) forcedOut.send(this, player, "{channel}", previousChannel, "{player}", player.getName());
-            else leave.send(this, player, "{channel}", previousChannel);
+            if (player.isOnline()) {
+                if (forced) forcedOut.send(this, player, "{channel}", previousChannel, "{player}", player.getName());
+                else leave.send(this, player, "{channel}", previousChannel);
+            }
             left.send(this, getChannelMembers(previousChannel), "{channel}", previousChannel, "{player}", player.getName(), "{members}", getChannelMembersString(previousChannel));
             String sound = getConfig().getString("sounds.leave", "villager_no");
             playSoundToChannel(previousChannel, sound);
