@@ -119,7 +119,7 @@ public class QuickChannels extends JavaPlugin implements Listener {
         String channel = getChannel(player);
         if (channel != null) {
             if (prefixSendsToChannel == msg.startsWith(prefix)) {
-                if (prefixSendsToChannel) msg = msg.substring(prefix.length());
+                if (msg.startsWith(prefix)) msg = msg.substring(prefix.length());
                 event.setCancelled(true);
                 if (linksRequirePermission && !player.hasPermission("quickchannels.links")) {
                     List<String> tests = new ArrayList<>(Arrays.asList(msg.split(" ")));
@@ -140,9 +140,8 @@ public class QuickChannels extends JavaPlugin implements Listener {
                 sendToChannel(channel, player, msg);
                 String sound = getConfig().getString("sounds.message", "click");
                 playSoundToChannel(channel, sound);
-            } else if (prefixSendsToChannel) {
-                error.send(this, player);
-                event.setCancelled(true);
+            } else if (!prefixSendsToChannel && msg.startsWith(prefix)) {
+                event.setMessage(msg.substring(prefix.length()));
             }
         }
     }
