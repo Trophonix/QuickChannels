@@ -148,18 +148,18 @@ public class QuickChannels extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (removeOnQuit) setChannel(event.getPlayer(), null, false);
+        if (removeOnQuit) setChannel(event.getPlayer(), null, false, false);
     }
 
     private String getChannel(@NotNull Player player) {
         return channels.get(player.getUniqueId());
     }
 
-    private void setChannel(@NotNull Player player, String channel, boolean forced) {
+    private void setChannel(@NotNull Player player, String channel, boolean forced, boolean selfMessage) {
         if (channel == null) {
             String previousChannel = getChannel(player);
             channels.remove(player.getUniqueId());
-            if (player.isOnline()) {
+            if (selfMessage && player.isOnline()) {
                 if (forced) forcedOut.send(this, player, "{channel}", previousChannel, "{player}", player.getName());
                 else leave.send(this, player, "{channel}", previousChannel);
             }
@@ -169,12 +169,18 @@ public class QuickChannels extends JavaPlugin implements Listener {
         } else {
             channels.put(player.getUniqueId(), channel);
             String memberString = getChannelMembersString(channel);
-            if (forced) forcedIn.send(this, player, "{channel}", channel, "{player}", player.getName(), "{members}", memberString);
-            else join.send(this, player, "{channel}", channel, "{player}", player.getName(), "{members}", memberString);
+            if (selfMessage && player.isOnline()) {
+                if (forced) forcedIn.send(this, player, "{channel}", channel, "{player}", player.getName(), "{members}", memberString);
+                else join.send(this, player, "{channel}", channel, "{player}", player.getName(), "{members}", memberString);
+            }
             joined.send(this, getChannelMembers(channel, player), "{channel}", channel, "{player}", player.getName(), "{members}", memberString);
             String sound = getConfig().getString("sounds.join", "pling");
             playSoundToChannel(channel, sound);
         }
+    }
+
+    private void setChannel(Player player, String channel, boolean forced) {
+        this.setChannel(player, channel, forced, true);
     }
 
     private void sendToChannel(@NotNull String channel, CommandSender sender, String message) {
